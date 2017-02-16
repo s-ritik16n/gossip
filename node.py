@@ -1,4 +1,4 @@
-import socket, select, threading
+import socket, select, threading, time
 
 class Node(object):
     busy_nodes = []
@@ -8,12 +8,15 @@ class Node(object):
         self.hostname = socket.gethostname()
         self.node.bind((self.hostname,self.port))
 
-        self.locked = False
-        self.timer = 0
         self.connected_nodes = connected_nodes
 
         print "Node created at port: {0}".format(self.port)
+        self.reset()
 
+
+    def reset(self):
+        self.locked = False
+        self.timer = 0
 
     def status_response(self,address):
         if not self.get_timer():
@@ -29,13 +32,14 @@ class Node(object):
         while(self.timer != 15):
             time.sleep(1)
             self.timer += 1
-        self.locked = True
+        self.reset()
 
     def get_timer(self):
         return self.timer==15 ? True : False
 
     def request_resources(self):
-        pass
+        #send resource request
+
 
     def receive_requests(self):
         request, address = self.node.recvfrom(512)
@@ -47,4 +51,4 @@ class Node(object):
                 self.locked = True
                 threading.Thread(target=receive_requests).start()
             else:
-                #busy_wait
+                threading.Thread(target=self.request_resources).start()
