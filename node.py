@@ -1,4 +1,4 @@
-import socket, select, threading, time
+import socket, select, threading, time, string
 
 class Node(object):
     busy_nodes = []
@@ -31,6 +31,25 @@ class Node(object):
             for node in busy_neighbour:
                 threading.Thread(target=self.request_resources,args=(node,)).start()
 
+    def request_resources(self,address):
+        self.node.sendto("node:{0} requesting resources...".format(self.port),(self.hostname,address))
+
+    def receive_requests(self):
+        request, address = self.node.recvfrom(512)
+        if string.find(request,"requesting",0,len(request)) > -1:
+            status_response(address)
+        elif string.find(request,"locked",0,len(request)) > -1:
+            time.sleep(1)
+            threading.Thread(target=self.request_resources,args=(node,)).start()
+        elif string.find(s,"released",0,len(request))>-1:
+            Node.busy_nodes.remove(address)
+            self.run()
+
+    def lock_resources(self):
+        self.locked = True
+        threading.Thread(target=self.receive_requests).start()
+        threading.Thread(target=self.start_timer).start()
+
     def status_response(self,address):
         if not self.get_timer():
             self.node.sendto("resources locked by Node: {0}".format(self.port),(self.hostname,address))
@@ -50,15 +69,3 @@ class Node(object):
 
     def get_timer(self):
         return self.timer == 15 ? True : False
-
-    def request_resources(self,address):
-        self.node.sendto("node:{0} requesting resources...".format(self.port),(self.hostname,address))
-
-    def receive_requests(self):
-        request, address = self.node.recvfrom(512)
-        status_response(address)
-
-    def lock_resources(self):
-        self.locked = True
-        threading.Thread(target=self.receive_requests).start()
-        threading.Thread(target=self.start_timer).start()
