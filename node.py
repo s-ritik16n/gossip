@@ -1,4 +1,5 @@
 import socket, select, threading, time, string
+from clint.textui import puts, colored, indent
 
 class Node(object):
     busy_nodes = []
@@ -8,11 +9,13 @@ class Node(object):
         self.node.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         self.port = port
         self.hostname = socket.gethostname()
-        print "Server running on {0}".format(self.hostname)
+        if len(Node.busy_nodes) <= 0:
+            puts(colored.cyan("\n\n---Server running on {0}---".format(self.hostname)))
         self.node.bind((self.hostname,self.port))
         self.connected_nodes = connected_nodes
 
-        print "Node created at port: {0}".format(self.port)
+        with indent(4, quote='>>'):
+            puts(colored.yellow("Node created at port: {0}".format(self.port)))
 
         self.locked = False
         self.timer = 0
@@ -32,13 +35,15 @@ class Node(object):
             print "inside else"
             for node in busy_neighbour:
                 time.sleep(1)
-                print "Node: {0} requesting resources from {1}...".format(self.port,node)
+                with indent(4, quote='>>'):
+                    puts(colored.yellow("Node: {0} requesting resources from {1}...".format(self.port,node)))
                 threading.Thread(target=self.request_resources,args=(node,)).start()
                 threading.Thread(target=self.receive_requests).start()
 
     def request_resources(self,address):
         time.sleep(1)
-        print "Node:{0} requesting resources from {1}".format(self.port,address)
+        with indent(4, quote='>>'):
+            puts(colored.yellow("Node: {0} requesting resources from {1}...".format(self.port,address)))
         self.node.sendto("Node: {0} requesting resources...".format(self.port),(self.hostname,address))
 
     def receive_requests(self):
@@ -60,17 +65,20 @@ class Node(object):
     def status_response(self,address):
         time.sleep(1)
         if not self.get_timer():
-            print "resources locked by Node: {0}".format(self.port)
+            with indent(4, quote='>>'):
+                puts(colored.red("resources locked by Node: {0}".format(self.port)))
             self.node.sendto("resources locked by Node: {0}".format(self.port),address)
         else:
-            print "Resource released by Node:{0}".format(self.port)
+            with indent(4, quote='>>'):
+                puts(colored.green("Resource released by Node:{0}".format(self.port)))
             self.release_resources(address)
 
     def release_resources(self,address):
         self.locked = False
         Node.busy_nodes.remove(self.node)
         time.sleep(1)
-        print "resources released by Node: {0}".format(self.port)
+        with indent(4, quote='>>'):
+            puts(colored.green("Resource released by Node:{0}".format(self.port)))
         self.node.sendto("resources released by Node: {0}".format(self.port),address)
 
     def start_timer(self):
