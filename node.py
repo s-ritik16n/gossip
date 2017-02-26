@@ -2,8 +2,10 @@ import socket, select, threading, time, string
 from clint.textui import puts, colored, indent
 
 class Node(object):
+
     busy_nodes = []
     infected_nodes=[]
+
     def __init__(self,port,connected_nodes):
         self.node = socket.socket(family=socket.AF_INET,type=socket.SOCK_DGRAM)
         self.node.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
