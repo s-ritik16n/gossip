@@ -1,7 +1,7 @@
 # gossip
-Dining Philosophers Problem Simulation using Gossip Protocol
+###Dining Philosophers Problem Simulation using Gossip Protocol
 
-Dining Philosophers Problem is a standard model of synchronization of
+**Dining Philosophers Problem** is a standard model of synchronization of
 processes running simultaneously on the same machine. The Philosophers
 sit around a table with rice bowls, and there is a chopstick between every
 two philosophers. The philosopher thinks, and then eats. When he picks up
@@ -12,7 +12,7 @@ model where other processes have to wait if a process is in its critical
 section.
 
 
-Gossip protocol is a protocol which is based on peer-to-peer technology.
+**Gossip protocol** is a protocol which is based on peer-to-peer technology.
 There a ​n nodes which are working together on a network. Each node ​X is
 connected to one or ​ more other nodes. Node ​X can communicate with its
 connected nodes to perform an action or to report an activity. It is useful in
