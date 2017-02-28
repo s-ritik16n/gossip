@@ -21,6 +21,8 @@ common database. A, B and C act as three nodes. A is connected to B and
 C, B is connected to A and C, C is connected to A and B. When a user
 performs transactions on server A, it sends signal to the other two servers(B
 and C) to update according to the transaction performed by the user.
+
+
 The project simulates the problem by representing philosophers as nodes.
 Each philosopher can communicate with its neighbours to know if the
 chopstick is under usage or free. Each node runs a timer for 5 seconds, as
