@@ -10,9 +10,10 @@ eat because one of the chopsticks on the side of each philosopher is used
 by the philosopher eating. This represents the process synchronization
 model where other processes have to wait if a process is in its critical
 section.
+
+
 Gossip protocol is a protocol which is based on peer-to-peer technology.
-There a ​n nodes which are working together on
- ​ a network. Each node ​X is
+There a ​n nodes which are working together on a network. Each node ​X is
 connected to one or ​ more other nodes. Node ​X can communicate with its
 connected nodes to perform an action or to report an activity. It is useful in
 many scenarios. Suppose, a firm has three servers A, B & C which share a
